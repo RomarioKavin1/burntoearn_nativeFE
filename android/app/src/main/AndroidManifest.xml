@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
       android:name=".MainApplication"
@@ -16,6 +17,19 @@
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
         android:exported="true">
+        <meta-data
+          android:name="com.google.android.gms.wallet.api.enabled"
+          android:value="true" />
+        <meta-data
+          android:name="com.google.android.gms.wallet.api.enabled"
+          android:value="true" />
+        <meta-data
+          android:name="com.google.android.gms.wallet.api.enabled"
+          android:value="true" />
+        <meta-data
+          android:name="com.google.android.gms.signin.api.key"
+          android:value="415611441023-v7b2kh5tiamoib28l5eiks0h6ulkm1gt.apps.googleusercontent.com" />
+
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

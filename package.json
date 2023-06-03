@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.18.1",
+    "@react-native-google-signin/google-signin": "^10.0.1",
     "@rneui/base": "^4.0.0-rc.7",
     "i": "^0.3.7",
     "npm": "^9.6.7",

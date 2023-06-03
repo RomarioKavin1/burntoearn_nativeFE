@@ -3,9 +3,56 @@ import { Image } from "react-native";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login1 = () => {
+  const [accessToken,setAccessToken]=React.useState(null);
   const navigation = useNavigation();
+  React.useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '415611441023-v7b2kh5tiamoib28l5eiks0h6ulkm1gt.apps.googleusercontent.com',
+      offlineAccess: true,
+      scopes: ['email', 'profile', "https://www.googleapis.com/auth/fitness.activity.read","https://www.googleapis.com/auth/fitness.heart_rate.read"]
+    });
+  }, []);
+  React.useEffect(() => {
+    // Obtain the access token
+    const receivedAccessToken = accessToken;
+    // Store the access token
+    const storeAccessToken = async (accessToken1: string) => {
+      if(accessToken!==null){
+      try {
 
+        await AsyncStorage.setItem('accessToken', accessToken1);
+        console.log('Access token stored successfully.');
+      } catch (error) {
+        console.error('Error storing access token:', error);
+      }}
+    };
+
+    storeAccessToken(receivedAccessToken);
+  }, [accessToken]);
+  const handleGoogleSignIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const info = await GoogleSignin.signIn();
+      // console.log('Access Token:', accessToken);
+      // console.log('ID Token:', idToken);
+      setAccessToken(info.idToken);
+      console.log(info);
+      navigation.navigate("Login");
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        console.log('Google Sign-In cancelled');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log('Google Sign-In is already in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log('Google Play Services is not available');
+      } else {
+        console.log('Google Sign-In error:', error.message);
+      }
+    }
+  };
   return (
     <View style={styles.login}>
       <Image
@@ -20,7 +67,8 @@ const Login1 = () => {
       <Text style={[styles.getFitGet, styles.getClr]}>Turning steps into savings, one token at a time!</Text>
       <Pressable
         style={styles.loginbutton}
-        onPress={() => navigation.navigate("Login")}
+        // onPress={() => navigation.navigate("Login")}
+        onPress={handleGoogleSignIn}
       >
         <View style={styles.buttonShape} />
         <View style={[styles.loginText, styles.loginTextLayout]}>
@@ -29,7 +77,6 @@ const Login1 = () => {
           </Text>
           <Image
             style={styles.googleFitIcon20181}
-            contentFit="cover"
             source={require("../assets/google-fit-icon-2018-1.png")}
           />
         </View>
