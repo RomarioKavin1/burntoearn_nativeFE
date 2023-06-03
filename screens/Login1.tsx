@@ -5,12 +5,13 @@ import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
 import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import environments from "./environments";
 const Login1 = () => {
   const [accessToken,setAccessToken]=React.useState(null);
   const navigation = useNavigation();
   React.useEffect(() => {
     GoogleSignin.configure({
-      webClientId: '415611441023-v7b2kh5tiamoib28l5eiks0h6ulkm1gt.apps.googleusercontent.com',
+      webClientId: environments(),
       offlineAccess: true,
       scopes: ['email', 'profile', "https://www.googleapis.com/auth/fitness.activity.read","https://www.googleapis.com/auth/fitness.heart_rate.read"]
     });
@@ -36,9 +37,10 @@ const Login1 = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const info = await GoogleSignin.signIn();
+      const token=await GoogleSignin.getTokens();
       // console.log('Access Token:', accessToken);
       // console.log('ID Token:', idToken);
-      setAccessToken(info.idToken);
+      setAccessToken(token.accessToken);
       console.log(info);
       navigation.navigate("Login");
     } catch (error) {
