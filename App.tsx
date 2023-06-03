@@ -13,6 +13,7 @@ import Coupons from "./screens/Coupons";
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Image } from "react-native";
 // import { Icon } from "@rneui/base";
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -32,20 +33,26 @@ const Hometabs =()=>{
       name="Home"
       
       component={HomeScroll3}
-      options={{tabBarIcon:()=>(  
-        <Icon name="ios-home" color={tintColor} size={25}/>
-        
-    )}}
+      options={{tabBarIcon:()=>(<Image
+        style={{height:30,width:30}}
+        source={require("./assets/home.png")}
+      />)}}
     />
     <Tab.Screen
       name="Rewards"
       component={RewardReward}
       // options={{ headerShown: false }}
-      options={{tabBarIcon:()=>(<Icon name="ios-medal" color={tintColor} size={25}/>)}}/>
+      options={{tabBarIcon:()=>(<Image
+        style={{height:35,width:35}}
+        source={require("./assets/stars.png")}
+      />)}}/>
     <Tab.Screen
       name="Coupons"
       component={Coupons}
-      options={{tabBarIcon:()=>(<Icon name="ios-card" color={tintColor} size={25}/>)}}/>
+      options={{tabBarIcon:()=>(<Image
+        style={{height:30,width:30}}
+        source={require("./assets/coupon.png")}
+      />)}}/>
   </Tab.Navigator>)
 }
 const App = () => {
