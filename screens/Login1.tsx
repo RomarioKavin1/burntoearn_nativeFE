@@ -3,7 +3,7 @@ import { Image } from "react-native";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Login1 = () => {
   const [accessToken,setAccessToken]=React.useState(null);
