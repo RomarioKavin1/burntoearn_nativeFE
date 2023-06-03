@@ -20,7 +20,7 @@ const InviteFriendsCard = () => {
         </View>
         <Image
           style={[styles.icon, styles.textPosition]}
-          source={require("../assets/icon.png")}
+          source={require("../assets/add.png")}
         />
       </View>
     </View>
@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     left: 24,
     width: 64,
     height: 64,
-    display: "none",
   },
   content: {
     height: "100%",

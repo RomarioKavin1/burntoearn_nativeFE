@@ -17,12 +17,6 @@ const HomeScroll3 = () => {
      
         <InviteFriendsCard />
         
-        {/* <LinearGradient
-          style={styles.base}
-          locations={[0, 1]}
-          colors={["#ff6079", "rgba(255, 96, 121, 0.49)"]}
-        /> */}
-        
         <TodaysInformationContainer />
         
         <Image
@@ -33,9 +27,7 @@ const HomeScroll3 = () => {
       </View>
       
       <View style={styles.offset}>
-      
-      {/* <ThursdayContainer /> */}
-      <ConnectedContainer />
+        <ConnectedContainer />
       
       </View>
     </View>
