@@ -36,7 +36,7 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -51,5 +51,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Circular_Std_bold.ttf</string>
+		<string>Circular_Std_regular.ttf</string>
+		<string>DM_Sans_bold.ttf</string>
+		<string>Poppins_regular.ttf</string>
+		<string>Poppins_semibold.ttf</string>
+		<string>Roboto_bold.ttf</string>
+		<string>Roboto_regular.ttf</string>
+	</array>
 </dict>
 </plist>

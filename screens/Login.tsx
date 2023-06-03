@@ -62,11 +62,10 @@ const styles = StyleSheet.create({
   syncYourWallet: {
     top: 215,
     left: 25,
-    fontSize: FontSize.size_29xl,
+    fontSize: 40,
     letterSpacing: -2,
     lineHeight: 59,
-    fontWeight: "700",
-    fontFamily: FontFamily.dMSansBold,
+    fontFamily: FontFamily.poppinsSemibold,
     color: Color.colorsWhite100,
     width: 350,
     height: 118,
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
     width: 217,
     textAlign: "center",
     left: 2,
-    top: 45,
+    top: 40,
   },
   loginText: {
     top: 19,
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   metamaskFox2Icon: {
-    top: 305,
+    top: 292,
     left: 285,
     width: 40,
     height: 40,

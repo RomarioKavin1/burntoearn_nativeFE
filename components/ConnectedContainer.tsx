@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     height: 20,
   },
   tokenbar: {
-    top: 17,
+    top: 15,
     left: 97,
     height: 45,
     width: 254,

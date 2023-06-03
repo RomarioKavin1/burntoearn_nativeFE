@@ -1,0 +1,33 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Circular_Std_bold.ttf",
+      "sha1": "879abb2579e83ab43c09aad8fa78f2d614ace077"
+    },
+    {
+      "path": "assets/fonts/Circular_Std_regular.ttf",
+      "sha1": "e41d5d04155f6233cdec9176a8a7eb3e0cd2b70a"
+    },
+    {
+      "path": "assets/fonts/DM_Sans_bold.ttf",
+      "sha1": "ef47944cd61dfd6889e7f0bb7596d87849d0e6cb"
+    },
+    {
+      "path": "assets/fonts/Poppins_regular.ttf",
+      "sha1": "e247a92158e112f8bf7b638c8d95381d66b00dbb"
+    },
+    {
+      "path": "assets/fonts/Poppins_semibold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    },
+    {
+      "path": "assets/fonts/Roboto_bold.ttf",
+      "sha1": "62442a18a9fe9457c1afeabf683d263a691b7798"
+    },
+    {
+      "path": "assets/fonts/Roboto_regular.ttf",
+      "sha1": "18788c5d630fa695f9283f6393bfa541b2031508"
+    }
+  ]
+}
