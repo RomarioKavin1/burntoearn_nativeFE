@@ -12,54 +12,56 @@ import {createMaterialBottomTabNavigator} from '@react-navigation/material-botto
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Image} from 'react-native';
+import {metamaskWallet, ThirdwebProvider} from '@thirdweb-dev/react-native';
 // import { Icon } from "@rneui/base";
 const Tab = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 const tintColor = '#2d3436';
 const Hometabs = () => {
   return (
-    <Tab.Navigator
-      initialRouteName="Login1"
-      // screenOptions={{ headerShown: false }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScroll3}
-        options={{
-          tabBarIcon: () => (
-            <Image
-              style={{height: 30, width: 30}}
-              source={require('./assets/home.png')}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Rewards"
-        component={RewardReward}
-        // options={{ headerShown: false }}
-        options={{
-          tabBarIcon: () => (
-            <Image
-              style={{height: 35, width: 35}}
-              source={require('./assets/stars.png')}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Coupons"
-        component={Coupons}
-        options={{
-          tabBarIcon: () => (
-            <Image
-              style={{height: 30, width: 30}}
-              source={require('./assets/coupon.png')}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+   
+      <Tab.Navigator
+        initialRouteName="Login1"
+        // screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={HomeScroll3}
+          options={{
+            tabBarIcon: () => (
+              <Image
+                style={{height: 30, width: 30}}
+                source={require('./assets/home.png')}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Rewards"
+          component={RewardReward}
+          // options={{ headerShown: false }}
+          options={{
+            tabBarIcon: () => (
+              <Image
+                style={{height: 35, width: 35}}
+                source={require('./assets/stars.png')}
+              />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Coupons"
+          component={Coupons}
+          options={{
+            tabBarIcon: () => (
+              <Image
+                style={{height: 30, width: 30}}
+                source={require('./assets/coupon.png')}
+              />
+            ),
+          }}
+        />
+      </Tab.Navigator>
   );
 };
 const App = () => {
@@ -67,6 +69,9 @@ const App = () => {
 
   return (
     <>
+     <ThirdwebProvider
+      activeChain="mumbai"
+      supportedWallets={[metamaskWallet()]}>
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator
@@ -105,6 +110,8 @@ const App = () => {
           </Stack.Navigator>
         ) : null}
       </NavigationContainer>
+    </ThirdwebProvider>
+
     </>
   );
 };
