@@ -26,7 +26,7 @@ const Countdown = () => {
   const [isPlaying, setIsPlaying] = React.useState(true);
   const [mintable, setMintable] = React.useState(true);
   const {contract, isLoading: isLoadingContract} = useContract(
-    '0x7De445626bdc3dadC2953D08Ff5765fB038bb558',
+    '0xD99c9590f0c459bEc0c8eF4bcaFA129214b54a04',
   );
   const {mutateAsync: mintTokens, isLoading: isLoadingMintTokens} =
     useContractWrite(contract, 'mintTokens');
