@@ -1,19 +1,24 @@
-import * as React from "react";
-import { Image } from "react-native";
-import { StyleSheet, Text, View, Pressable } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { Color, FontSize, FontFamily, Border } from "../GlobalStyles";
-import { GoogleSignin, statusCodes } from '@react-native-community/google-signin';
+import * as React from 'react';
+import {Image} from 'react-native';
+import {StyleSheet, Text, View, Pressable} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {Color, FontSize, FontFamily, Border} from '../GlobalStyles';
+import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import environments from "./environments";
+import {webClientId} from './environments';
 const Login1 = () => {
-  const [accessToken,setAccessToken]=React.useState(null);
+  const [accessToken, setAccessToken] = React.useState(null);
   const navigation = useNavigation();
   React.useEffect(() => {
     GoogleSignin.configure({
-      webClientId: environments(),
+      webClientId,
       offlineAccess: true,
-      scopes: ['email', 'profile', "https://www.googleapis.com/auth/fitness.activity.read","https://www.googleapis.com/auth/fitness.heart_rate.read"]
+      scopes: [
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/fitness.activity.read',
+        'https://www.googleapis.com/auth/fitness.heart_rate.read',
+      ],
     });
   }, []);
   React.useEffect(() => {
@@ -21,14 +26,14 @@ const Login1 = () => {
     const receivedAccessToken = accessToken;
     // Store the access token
     const storeAccessToken = async (accessToken1: string) => {
-      if(accessToken!==null){
-      try {
-
-        await AsyncStorage.setItem('accessToken', accessToken1);
-        console.log('Access token stored successfully.');
-      } catch (error) {
-        console.error('Error storing access token:', error);
-      }}
+      if (accessToken !== null) {
+        try {
+          await AsyncStorage.setItem('accessToken', accessToken1);
+          console.log('Access token stored successfully.');
+        } catch (error) {
+          console.error('Error storing access token:', error);
+        }
+      }
     };
 
     storeAccessToken(receivedAccessToken);
@@ -37,12 +42,12 @@ const Login1 = () => {
     try {
       await GoogleSignin.hasPlayServices();
       const info = await GoogleSignin.signIn();
-      const token=await GoogleSignin.getTokens();
+      const token = await GoogleSignin.getTokens();
       // console.log('Access Token:', accessToken);
       // console.log('ID Token:', idToken);
       setAccessToken(token.accessToken);
       console.log(info);
-      navigation.navigate("Login");
+      navigation.navigate('Login');
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         console.log('Google Sign-In cancelled');
@@ -59,19 +64,17 @@ const Login1 = () => {
     <View style={styles.login}>
       <Image
         style={[styles.illustrationIcon, styles.illustrationIconPosition]}
-        source={require("../assets/illustration2.png")}
+        source={require('../assets/illustration2.png')}
       />
-      <Image
-        style={styles.groupIcon}
-        source={require("../assets/group.png")}
-      />
+      <Image style={styles.groupIcon} source={require('../assets/group.png')} />
       <Text style={[styles.fithouse, styles.getClr]}>Burn To Earn</Text>
-      <Text style={[styles.getFitGet, styles.getClr]}>Turning steps into savings, one token at a time!</Text>
+      <Text style={[styles.getFitGet, styles.getClr]}>
+        Turning steps into savings, one token at a time!
+      </Text>
       <Pressable
         style={styles.loginbutton}
         // onPress={() => navigation.navigate("Login")}
-        onPress={handleGoogleSignIn}
-      >
+        onPress={handleGoogleSignIn}>
         <View style={styles.buttonShape} />
         <View style={[styles.loginText, styles.loginTextLayout]}>
           <Text style={[styles.continueWithGooglefit, styles.loginTextLayout]}>
@@ -79,7 +82,7 @@ const Login1 = () => {
           </Text>
           <Image
             style={styles.googleFitIcon20181}
-            source={require("../assets/google-fit-icon-2018-1.png")}
+            source={require('../assets/google-fit-icon-2018-1.png')}
           />
         </View>
       </Pressable>
@@ -94,27 +97,27 @@ const styles = StyleSheet.create({
   },
   getClr: {
     color: Color.colorsWhite100,
-    textAlign: "center",
-    position: "absolute",
+    textAlign: 'center',
+    position: 'absolute',
   },
   loginTextLayout: {
     height: 24,
-    position: "absolute",
+    position: 'absolute',
   },
   illustrationIcon: {
     width: 700,
     height: 700,
-    position: "absolute",
+    position: 'absolute',
   },
   groupIcon: {
     left: 300,
     width: 220,
     height: 220,
     top: -90,
-    position: "absolute",
+    position: 'absolute',
   },
   fithouse: {
-    position: "absolute",
+    position: 'absolute',
     top: 199,
     left: 30,
     fontSize: 48,
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.poppinsRegular,
     width: 350,
     height: 118,
-    textAlign: "center",
+    textAlign: 'center',
   },
   getFitGet: {
     top: 250,
@@ -131,27 +134,27 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     fontFamily: FontFamily.poppinsRegular,
     width: 326,
-    textAlign: "center",
+    textAlign: 'center',
   },
   buttonShape: {
-    height: "100%",
-    top: "90%",
-    right: "10%",
-    bottom: "0%",
-    left: "0%",
+    height: '100%',
+    top: '90%',
+    right: '10%',
+    bottom: '0%',
+    left: '0%',
     borderRadius: Border.br_base,
     backgroundColor: Color.colorsWhite100,
-    position: "absolute",
-    width: "100%",
+    position: 'absolute',
+    width: '100%',
   },
   continueWithGooglefit: {
     fontSize: FontSize.size_mid,
     lineHeight: 26,
-    fontWeight: "600",
+    fontWeight: '600',
     fontFamily: FontFamily.poppinsSemibold,
     color: Color.black,
     width: 217,
-    textAlign: "center",
+    textAlign: 'center',
     left: 2,
     top: 43,
   },
@@ -160,8 +163,8 @@ const styles = StyleSheet.create({
     left: 230,
     width: 25,
     height: 21,
-    position: "absolute",
-    overflow: "hidden",
+    position: 'absolute',
+    overflow: 'hidden',
   },
   loginText: {
     top: 19,
@@ -169,20 +172,20 @@ const styles = StyleSheet.create({
     width: 242,
   },
   loginbutton: {
-    height: "7.64%",
-    width: "70.93%",
-    top: "36.45%",
-    right: "14.4%",
-    bottom: "55.91%",
-    left: "14.67%",
-    position: "absolute",
+    height: '7.64%',
+    width: '70.93%',
+    top: '36.45%',
+    right: '14.4%',
+    bottom: '55.91%',
+    left: '14.67%',
+    position: 'absolute',
   },
   login: {
     backgroundColor: Color.lightcoral,
     flex: 1,
     height: 812,
-    overflow: "hidden",
-    width: "100%",
+    overflow: 'hidden',
+    width: '100%',
   },
 });
 

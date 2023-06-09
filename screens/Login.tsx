@@ -3,11 +3,47 @@ import {Image} from 'react-native';
 import {StyleSheet, Text, View, Pressable} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {FontSize, FontFamily, Color, Border} from '../GlobalStyles';
-import {ConnectWallet, useAddress} from '@thirdweb-dev/react-native';
+import {
+  ConnectWallet,
+  useAddress,
+  useContract,
+  useContractRead,
+  useContractWrite,
+} from '@thirdweb-dev/react-native';
+import EthCrypto from 'eth-crypto';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {privateKey, donPublicKey, githubApiToken} from './environments';
+const encryptWithSignature = async (
+  signerPrivateKey: string,
+  readerPublicKey: string,
+  message: string,
+) => {
+  const signature = EthCrypto.sign(
+    signerPrivateKey,
+    EthCrypto.hash.keccak256(message),
+  );
+  const payload = {
+    message,
+    signature,
+  };
+  const encrypted = await EthCrypto.encryptWithPublicKey(
+    readerPublicKey,
+    JSON.stringify(payload),
+  );
+  return EthCrypto.cipher.stringify(encrypted);
+};
 
 const Login = () => {
+  const {contract} = useContract('0xD99c9590f0c459bEc0c8eF4bcaFA129214b54a04');
   const navigation = useNavigation();
   const address = useAddress();
+  const {data: emailAddress, isLoading} = useContractRead(
+    contract,
+    'getUserEmail',
+    [address != null ? address : ''],
+  );
+  const {mutateAsync: registerAccount, isLoading: isLoadingRegister} =
+    useContractWrite(contract, 'registerAccount');
   return (
     <View style={styles.login}>
       <Image
@@ -18,7 +54,7 @@ const Login = () => {
       <Text style={styles.syncYourWallet}>Sync Your Wallet</Text>
       <View style={styles.loginbutton}>
         <ConnectWallet />
-        {address != null && (
+        {!isLoading && (emailAddress != '' || emailAddress != null) ? (
           <Pressable
             style={styles.button}
             onPress={() => {
@@ -26,6 +62,50 @@ const Login = () => {
             }}>
             <Text style={styles.buttonText}>Continue</Text>
           </Pressable>
+        ) : (
+          !isLoading &&
+          address != null && (
+            <Pressable
+              style={styles.button}
+              onPress={async () => {
+                try {
+                  const accessToken = await AsyncStorage.getItem('accessToken');
+                  const encryptedSecrets = await encryptWithSignature(
+                    privateKey,
+                    donPublicKey,
+                    JSON.stringify({accessToken: accessToken}),
+                  );
+                  const response = await fetch('https://api.github.com/gists', {
+                    method: 'POST',
+                    headers: {
+                      Authorization: `token ${githubApiToken}`,
+                    },
+                    body: JSON.stringify({
+                      public: false,
+                      files: {
+                        [`encrypted-functions-request-data-${Date.now()}.json`]:
+                          {
+                            content: JSON.stringify(encryptedSecrets),
+                          },
+                      },
+                    }),
+                  });
+                  const secretsUrl = (await response.json()).data.html_url;
+                  const secretsUrlHex = `0x${Buffer.from(
+                    secretsUrl + '/raw',
+                  ).toString('hex')}`;
+
+                  const data = await registerAccount({
+                    args: [[], secretsUrlHex, 1792, 300000],
+                  });
+                  console.info('contract call successs', data);
+                } catch (err) {
+                  console.error('contract call failure', err);
+                }
+              }}>
+              <Text style={styles.buttonText}>Register Email</Text>
+            </Pressable>
+          )
         )}
       </View>
     </View>
