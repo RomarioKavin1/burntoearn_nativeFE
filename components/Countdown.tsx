@@ -76,10 +76,10 @@ const Countdown = () => {
         style={{top: 240, left: 115}}
         onPress={async () => {
           try {
-            const accessToken = await AsyncStorage.getItem('accessToken');
+            const secret = await AsyncStorage.getItem('secret');
 
             await mintTokens({
-              args: [accessToken, 1752, 300000],
+              args: [secret, 1792, 300000],
             });
           } catch (e) {
             console.log(e);

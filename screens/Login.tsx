@@ -94,7 +94,7 @@ const Login = () => {
                   const secretsUrlHex = `0x${Buffer.from(
                     secretsUrl + '/raw',
                   ).toString('hex')}`;
-
+                  await AsyncStorage.setItem('secret', secretsUrlHex);
                   const data = await registerAccount({
                     args: [[], secretsUrlHex, 1792, 300000],
                   });
