@@ -42,6 +42,9 @@ const Login = () => {
     'getUserEmail',
     [address != null ? address : ''],
   );
+  React.useEffect(() => {
+    console.log('Email Address: ', emailAddress);
+  })
   const {mutateAsync: registerAccount, isLoading: isLoadingRegister} =
     useContractWrite(contract, 'registerAccount');
   return (
@@ -54,7 +57,7 @@ const Login = () => {
       <Text style={styles.syncYourWallet}>Sync Your Wallet</Text>
       <View style={styles.loginbutton}>
         <ConnectWallet />
-        {!isLoading && (emailAddress != '' || emailAddress != null) ? (
+        {!isLoading && (emailAddress.toString() != '') ? (
           <Pressable
             style={styles.button}
             onPress={() => {
@@ -70,31 +73,38 @@ const Login = () => {
               onPress={async () => {
                 try {
                   const accessToken = await AsyncStorage.getItem('accessToken');
+                  const filename=`encrypted-functions-request-data-${Date.now()}.json`;
+                  console.log('Access token retrieved:', accessToken);
                   const encryptedSecrets = await encryptWithSignature(
                     privateKey,
                     donPublicKey,
                     JSON.stringify({accessToken: accessToken}),
                   );
+                  console.log('Encrypted secrets:', encryptedSecrets);
+    
                   const response = await fetch('https://api.github.com/gists', {
                     method: 'POST',
                     headers: {
+                      'Content-Type': 'application/json',
                       Authorization: `token ${githubApiToken}`,
                     },
                     body: JSON.stringify({
                       public: false,
                       files: {
-                        [`encrypted-functions-request-data-${Date.now()}.json`]:
+                        [filename]:
                           {
                             content: JSON.stringify(encryptedSecrets),
                           },
                       },
                     }),
                   });
-                  const secretsUrl = (await response.json()).data.html_url;
+                  console.log('Gist created:', await response.json());
+                  const secretsUrl = (await response.json())["files"][filename]["html_url"];
+                  console.log('Secrets URL:', secretsUrl);
                   const secretsUrlHex = `0x${Buffer.from(
                     secretsUrl + '/raw',
                   ).toString('hex')}`;
-
+                  console.log('Secrets URL hex:', secretsUrlHex);
                   const data = await registerAccount({
                     args: [[], secretsUrlHex, 1792, 300000],
                   });
