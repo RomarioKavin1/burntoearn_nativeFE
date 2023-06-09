@@ -38,7 +38,8 @@ const Countdown = () => {
     <View style={styles.container}>
       <View style={{position: 'absolute'}}>
         <CountdownCircleTimer
-          initialRemainingTime={getMintTime(lastClaimTimestamp.toString())}
+          // initialRemainingTime={getMintTime(lastClaimTimestamp.toString())}
+          initialRemainingTime={30}
           isGrowing={true}
           isPlaying={isPlaying}
           duration={24 * 60 * 60}

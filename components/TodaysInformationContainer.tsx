@@ -10,7 +10,7 @@ const TodaysInformationContainer = () => {
   const [stepCount, setStepCount] = React.useState<number | null>(null);
   const [caloriesBurned, setCaloriesBurned] = React.useState<number | null>(null);
   const [heartRate, setHeartRate] = React.useState<number | null>(null);
-
+  
   React.useEffect(() => {
     const getAccessToken = async () => {
       try {
@@ -21,6 +21,37 @@ const TodaysInformationContainer = () => {
         console.error('Error retrieving access token:', error);
         return null;
       }
+    };
+    // Store the access token
+    const storesteps = async (steps: string) => {
+      if(steps!==null){
+      try {
+
+        await AsyncStorage.setItem('steps', steps);
+        console.log('steps stored successfully.');
+      } catch (error) {
+        console.error('Error steps:', error);
+      }}
+    };
+    const storeheart = async (heart: string) => {
+      if(heart!==null){
+      try {
+
+        await AsyncStorage.setItem('heartpnts', heart);
+        console.log('heartpnts stored successfully.');
+      } catch (error) {
+        console.error('Error heartpnts:', error);
+      }}
+    };
+    const storecal = async (cal: string) => {
+      if(cal!==null){
+      try {
+
+        await AsyncStorage.setItem('calories', cal);
+        console.log('cals stored successfully.');
+      } catch (error) {
+        console.error('Error cals:', error);
+      }}
     };
     const fetchDataFromGoogleFit = async () => {
       const accessToken = await getAccessToken();
@@ -59,6 +90,7 @@ const TodaysInformationContainer = () => {
                 }, 0);
               }, 0);
               setStepCount(steps);
+              storesteps(steps.toString());
             } else {
               console.log('No step count data available for the specified time range.');
               setStepCount(0);
@@ -96,6 +128,7 @@ const TodaysInformationContainer = () => {
                 }, 0);
               }, 0);
               setCaloriesBurned(Math.round(calories));
+              storecal(Math.round(calories).toString());
             } else {
               console.log('No calorie count data available for the specified time range.');
               setCaloriesBurned(0);
@@ -131,6 +164,7 @@ const TodaysInformationContainer = () => {
                 }, 0);
               }, 0);
               setHeartRate(bpm);
+              storeheart(bpm.toString());
             } else {
               console.log('No heart count data available for the specified time range.');
               setHeartRate(0);
