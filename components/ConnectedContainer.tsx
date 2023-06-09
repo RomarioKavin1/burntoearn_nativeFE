@@ -28,7 +28,7 @@ const ControlledTooltip: React.FC<TooltipProps> = props => {
 const ConnectedContainer = () => {
   const address = useAddress();
   const {contract, isLoading: isLoadingContract} = useContract(
-    '0x5708A9ef5ED5e8A494aC96c2b8D88F44b02aCB13',
+    '0x7De445626bdc3dadC2953D08Ff5765fB038bb558',
   );
   const {data: balance, isLoading: isLoadingBalance} = useContractRead(
     contract,
