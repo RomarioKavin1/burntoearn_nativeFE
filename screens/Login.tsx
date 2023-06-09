@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     marginLeft: 30,
-    marginTop: 30,
+    marginTop: 10,
   },
   buttonText: {
     color: 'black',
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   loginbutton: {
     height: '7.64%',
     width: '70.93%',
-    top: '36.45%',
+    top: '45.45%',
     right: '14.4%',
     bottom: '55.91%',
     left: '14.67%',

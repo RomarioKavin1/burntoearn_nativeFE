@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Border, Color, FontFamily, FontSize } from "../GlobalStyles";
 import { Avatar} from "@rneui/base";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Icon } from "@rneui/base";
 const TodaysInformationContainer = () => {
   const navigation = useNavigation();
   const [stepCount, setStepCount] = React.useState<number | null>(null);
@@ -242,9 +243,7 @@ const TodaysInformationContainer = () => {
         <Avatar
           size={64}
           rounded
-          icon={{ name:'calendar',
-          type:'antdesign',
-          color:'#FF6079' }}
+          source={require('../assets/calendar2.png')}
           containerStyle={{ backgroundColor: '#FFFFFF' ,borderColor:'#7F7F7F',borderWidth:0.2}}
         />
         </View>
