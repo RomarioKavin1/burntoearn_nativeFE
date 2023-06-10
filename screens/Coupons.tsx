@@ -60,6 +60,7 @@ const Coupons = () => {
             },
           );
           setCoups(coupons);
+          console.log(coupons);
         } catch (e) {
           console.log('ERROR OCCURED WHEN FETCHING FROM IPFS');
           console.log(e);
