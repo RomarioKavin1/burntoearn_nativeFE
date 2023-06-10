@@ -150,7 +150,7 @@ const Countdown = () => {
             const secretsUrl = res.html_url + '/raw';
             console.log('Secrets URL:', secretsUrl);
 
-            const secretUrlHexEncrypted = EthCrypto.cipher.stringify(
+            const secretUrlHexEncrypted ='0x'+ EthCrypto.cipher.stringify(
               await EthCrypto.encryptWithPublicKey(donPublicKey, secretsUrl),
             );
             console.log('Secrets URL hex encrypted:', secretUrlHexEncrypted);
