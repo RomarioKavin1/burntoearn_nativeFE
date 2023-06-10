@@ -34,39 +34,54 @@ const Countdown = () => {
     useContractRead(contract, 'getLastClaimed', [
       address != null ? address : '',
     ]);
+  const [timeRemaining, setTimeRemaining] = React.useState(-1);
+  React.useEffect(() => {
+    if (lastClaimTimestamp) {
+      const timeDiff = Date.now() - Number(lastClaimTimestamp);
+      if (timeDiff > 86400000) {
+        setTimeRemaining(0);
+      } else {
+        setTimeRemaining(timeDiff);
+      }
+    }
+  }, [lastClaimTimestamp]);
   return (
     <View style={styles.container}>
       <View style={{position: 'absolute'}}>
-        <CountdownCircleTimer
-          // initialRemainingTime={getMintTime(lastClaimTimestamp.toString())}
-          initialRemainingTime={30}
-          isGrowing={true}
-          isPlaying={isPlaying}
-          duration={24 * 60 * 60}
-          colors={'#FF6079'}
-          onComplete={() => setMintable(false)}
-          updateInterval={1}>
-          {({remainingTime}) => {
-            const hours = Math.floor(remainingTime / 3600);
-            const minutes = Math.floor((remainingTime % 3600) / 60);
-            const seconds = remainingTime % 60;
-            return (
-              <View>
-                <Text
-                  style={{fontSize: 20, fontFamily: FontFamily.poppinsRegular}}>
-                  Next mint in
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontFamily: FontFamily.poppinsRegular,
-                    alignContent: 'center',
-                    textAlign: 'center',
-                  }}>{`${hours}:${minutes}:${seconds}`}</Text>
-              </View>
-            );
-          }}
-        </CountdownCircleTimer>
+        {lastClaimTimestamp != undefined && timeRemaining != -1 && (
+          <CountdownCircleTimer
+            initialRemainingTime={timeRemaining}
+            isGrowing={true}
+            isPlaying={isPlaying}
+            duration={24 * 60 * 60}
+            colors={'#FF6079'}
+            onComplete={() => setMintable(false)}
+            updateInterval={1}>
+            {({remainingTime}) => {
+              const hours = Math.floor(remainingTime / 3600);
+              const minutes = Math.floor((remainingTime % 3600) / 60);
+              const seconds = remainingTime % 60;
+              return (
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontFamily: FontFamily.poppinsRegular,
+                    }}>
+                    Next mint in
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontFamily: FontFamily.poppinsRegular,
+                      alignContent: 'center',
+                      textAlign: 'center',
+                    }}>{`${hours}:${minutes}:${seconds}`}</Text>
+                </View>
+              );
+            }}
+          </CountdownCircleTimer>
+        )}
       </View>
       <Button
         mode="elevated"
@@ -77,10 +92,10 @@ const Countdown = () => {
         onPress={async () => {
           try {
             const secret = await AsyncStorage.getItem('secret');
-
-            await mintTokens({
-              args: [secret, 1803, 300000],
-            });
+            console.log('LastTimestamp' + lastClaimTimestamp.toString());
+            // await mintTokens({
+            //   args: [secret, 1803, 300000],
+            // });
           } catch (e) {
             console.log(e);
           }
