@@ -19,14 +19,14 @@ const Coupons = () => {
       discount: '10',
       img: require('../assets/nikee4.jpg'),
     },
-    {
-      id: '1',
-      name: 'Adidas Store Coupon',
-      desc: 'Adidas store',
-      cost: '13',
-      discount: '5',
-      img: require('../assets/adidas.jpg'),
-    },
+    // {
+    //   id: '1',
+    //   name: 'Adidas Store Coupon',
+    //   desc: 'Adidas store',
+    //   cost: '13',
+    //   discount: '5',
+    //   img: require('../assets/adidas.jpg'),
+    // },
   ]);
   const {contract: burnToEarnContract, isLoading: isLoadingBurnToEarnContract} =
     useContract('0x995A39d59484676643c631a785726534ce3CE659');
@@ -50,17 +50,32 @@ const Coupons = () => {
   const [selectedCoupon, setSelectedCoupon] = React.useState(0);
   useEffect(() => {
     if (tokenURIs != undefined && tokenURIs.length > 0) {
+      // console.log('TOKEN URIS');
+      // console.log(tokenURIs);
       (async function () {
         try {
-          const coupons = tokenURIs.map(
-            async (tokenURI: string, index: number) => {
-              const response = await fetch(tokenURI);
-              const json = await response.json();
-              return json;
-            },
-          );
-          setCoups(coupons);
-          console.log(coupons);
+          let coupons = [];
+          tokenURIs.forEach(async (tokenURI: string, index: number) => {
+            const response = await fetch(tokenURI);
+            const json = await response.json();
+            const newImageUrl = json.image.replace(
+              'ipfs://',
+              'https://ipfs.io/ipfs/',
+            );
+            coupons.push({
+              id: index.toString(),
+              name: json.name,
+              img: {uri: newImageUrl},
+              cost: json.attributes[0].value,
+              discount: json.attributes[1].value,
+              desc: json.description,
+            });
+            if (index == tokenURIs.length - 1) {
+              setCoups(coupons);
+            }
+          });
+
+          // setCoups(coupons);
         } catch (e) {
           console.log('ERROR OCCURED WHEN FETCHING FROM IPFS');
           console.log(e);
@@ -113,26 +128,29 @@ const Coupons = () => {
       </Modal>
       <View style={{left: 22, top: 12}}>
         <ConnectedContainer />
-        <View style={{left: -0, top: 102, paddingBottom: 100, paddingTop: 30}}>
-          <FlatList
-            style={{left: 10}}
-            data={coups}
-            renderItem={({item}) => (
-              <Product
-                name={item.name}
-                description={item.desc}
-                cost={item.cost}
-                discount={item.discount + '% Discount Coupon'}
-                img={item.img}
-                onPress={() => {
-                  setModalVisible(true);
-                  setSelectedCoupon(Number(item.id));
-                }}
-              />
-            )}
-            keyExtractor={item => item.id}
-          />
-        </View>
+        {coups.length > 0 && (
+          <View
+            style={{left: -0, top: 102, paddingBottom: 100, paddingTop: 30}}>
+            <FlatList
+              style={{left: 10}}
+              data={coups}
+              renderItem={({item}) => (
+                <Product
+                  name={item.name}
+                  description={item.desc}
+                  cost={item.cost}
+                  discount={item.discount + '% Discount Coupon'}
+                  img={item.img}
+                  onPress={() => {
+                    setModalVisible(true);
+                    setSelectedCoupon(Number(item.id));
+                  }}
+                />
+              )}
+              keyExtractor={item => item.id}
+            />
+          </View>
+        )}
       </View>
     </View>
   );
