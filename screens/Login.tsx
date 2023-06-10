@@ -57,7 +57,9 @@ const Login = () => {
       <Text style={styles.syncYourWallet}>Sync Your Wallet</Text>
       <View style={styles.loginbutton}>
         <ConnectWallet />
-        {!isLoading && emailAddress.toString() != '' ? (
+        {!isLoading &&
+        emailAddress != undefined &&
+        emailAddress.toString() != '' ? (
           <Pressable
             style={styles.button}
             onPress={() => {
@@ -73,19 +75,18 @@ const Login = () => {
               onPress={async () => {
                 try {
                   const accessToken = await AsyncStorage.getItem('accessToken');
-                  const filename = `encrypted-functions-request-data-${Date.now()}.json`;
                   console.log('Access token retrieved:', accessToken);
-                  const encryptedSecrets = {
-                    '0x0': Buffer.from(
-                      await encryptWithSignature(
-                        privateKey,
-                        donPublicKey,
-                        JSON.stringify({accessToken: accessToken}),
-                      ),
-                      'hex',
-                    ).toString('base64'),
-                  };
-                  console.log('Encrypted secrets:', encryptedSecrets);
+                  const offchainSecrets = {};
+
+                  offchainSecrets['0x0'] = Buffer.from(
+                    await encryptWithSignature(
+                      privateKey,
+                      donPublicKey,
+                      JSON.stringify({accessToken: accessToken}),
+                    ),
+                    'hex',
+                  ).toString('base64');
+                  console.log('Encrypted secrets:', offchainSecrets);
 
                   const response = await fetch('https://api.github.com/gists', {
                     method: 'POST',
@@ -96,28 +97,33 @@ const Login = () => {
                     body: JSON.stringify({
                       public: false,
                       files: {
-                        [filename]: {
-                          content: JSON.stringify(encryptedSecrets),
-                        },
+                        [`encrypted-functions-request-data-${Date.now()}.json`]:
+                          {
+                            content: JSON.stringify(offchainSecrets),
+                          },
                       },
                     }),
                   });
                   console.log('Gist created:');
                   const res = await response.json();
-                  const secretsUrl = res.html_url;
+                  const secretsUrl = res.html_url + '/raw';
                   console.log('Secrets URL:', secretsUrl);
-                  const secretsUrlHex = `0x${Buffer.from(
-                    secretsUrl + '/raw',
-                  ).toString('hex')}`;
-                  await AsyncStorage.setItem('secret', secretsUrlHex);
-                  console.log('Secrets URL hex:', secretsUrlHex);
-                  const data = await registerAccount({
-                    args: [[], secretsUrlHex, 1792, 300000],
-                    overrides:{
-                      gasLimit: 300000,
-                    }
-                  });
-                  console.info('contract call successs', data);
+
+                  const secretUrlHexEncrypted = EthCrypto.cipher.stringify(
+                    await EthCrypto.encryptWithPublicKey(
+                      donPublicKey,
+                      secretsUrl,
+                    ),
+                  );
+                  console.log(
+                    'Secrets URL hex encrypted:',
+                    secretUrlHexEncrypted,
+                  );
+
+                  // const data = await registerAccount({
+                  //   args: [[], secretUrlHexEncrypted, 1792, 300000],
+                  // });
+                  // console.info('contract call successs', data);
                 } catch (err) {
                   console.error('contract call failure', err);
                 }
