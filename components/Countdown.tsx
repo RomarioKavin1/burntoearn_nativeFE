@@ -10,6 +10,31 @@ import {
   useContractWrite,
 } from '@thirdweb-dev/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import EthCrypto from 'eth-crypto';
+import {
+  donPublicKey,
+  privateKey,
+  githubApiToken,
+} from '../screens/environments';
+const encryptWithSignature = async (
+  signerPrivateKey: string,
+  readerPublicKey: string,
+  message: string,
+) => {
+  const signature = EthCrypto.sign(
+    signerPrivateKey,
+    EthCrypto.hash.keccak256(message),
+  );
+  const payload = {
+    message,
+    signature,
+  };
+  const encrypted = await EthCrypto.encryptWithPublicKey(
+    readerPublicKey,
+    JSON.stringify(payload),
+  );
+  return EthCrypto.cipher.stringify(encrypted);
+};
 
 function getMintTime(lastTimestamp: string) {
   const currentTime = Date.now();
@@ -91,11 +116,48 @@ const Countdown = () => {
         style={{top: 240, left: 115}}
         onPress={async () => {
           try {
-            const secret = await AsyncStorage.getItem('secret');
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            console.log('Access token retrieved:', accessToken);
+            const offchainSecrets = {};
+
+            offchainSecrets['0x0'] = Buffer.from(
+              await encryptWithSignature(
+                privateKey,
+                donPublicKey,
+                JSON.stringify({accessToken: accessToken}),
+              ),
+              'hex',
+            ).toString('base64');
+            console.log('Encrypted secrets:', offchainSecrets);
+
+            const response = await fetch('https://api.github.com/gists', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `token ${githubApiToken}`,
+              },
+              body: JSON.stringify({
+                public: false,
+                files: {
+                  [`encrypted-functions-request-data-${Date.now()}.json`]: {
+                    content: JSON.stringify(offchainSecrets),
+                  },
+                },
+              }),
+            });
+            console.log('Gist created:');
+            const res = await response.json();
+            const secretsUrl = res.html_url + '/raw';
+            console.log('Secrets URL:', secretsUrl);
+
+            const secretUrlHexEncrypted = EthCrypto.cipher.stringify(
+              await EthCrypto.encryptWithPublicKey(donPublicKey, secretsUrl),
+            );
+            console.log('Secrets URL hex encrypted:', secretUrlHexEncrypted);
             console.log('LastTimestamp' + lastClaimTimestamp.toString());
-            // await mintTokens({
-            //   args: [secret, 1803, 300000],
-            // });
+            await mintTokens({
+              args: [secretUrlHexEncrypted, 1803, 300000],
+            });
           } catch (e) {
             console.log(e);
           }

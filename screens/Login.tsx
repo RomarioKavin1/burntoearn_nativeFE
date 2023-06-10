@@ -121,10 +121,7 @@ const Login = () => {
                   );
                   // SecretUrl looks something like => a70b02baa0f3ac19d59039c9b45042cd03ea8fb8722ef9cf362586455e5c92474dcce92553de14103109b805d7ffac73cf9d1fd89972f5bee1d1975b2592039745e55e83894a56109c5b60e2f8ec9384e30973a52046277b10b6b0e08611dabb4ad73775137e2350d922a76963d32fd593c64f20b1ef4bff85cf1a44ffec6a6c90fbf63c0c09bba93ca58b612ee9d74f7e9785aee03e653d209c068c463a36052fc9ea362217b9974b6379da7dc41941c9
                   // 356 characters in length
-                  await AsyncStorage.setItem(
-                    'secret',
-                    '0x' + secretUrlHexEncrypted,
-                  );
+
                   const data = await registerAccount({
                     args: [[], '0x' + secretUrlHexEncrypted, '1803', '300000'],
                   });
