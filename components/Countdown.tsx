@@ -26,7 +26,7 @@ const Countdown = () => {
   const [isPlaying, setIsPlaying] = React.useState(true);
   const [mintable, setMintable] = React.useState(true);
   const {contract, isLoading: isLoadingContract} = useContract(
-    '0xD99c9590f0c459bEc0c8eF4bcaFA129214b54a04',
+    '0x995A39d59484676643c631a785726534ce3CE659',
   );
   const {mutateAsync: mintTokens, isLoading: isLoadingMintTokens} =
     useContractWrite(contract, 'mintTokens');
@@ -79,7 +79,7 @@ const Countdown = () => {
             const secret = await AsyncStorage.getItem('secret');
 
             await mintTokens({
-              args: [secret, 1792, 300000],
+              args: [secret, 1803, 300000],
             });
           } catch (e) {
             console.log(e);
