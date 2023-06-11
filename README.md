@@ -1,5 +1,8 @@
 # BURN TO EARN
 
+![small](https://github.com/RomarioKavin1/burntoearn_nativeFE/assets/79229998/6110a0b2-77f4-47bd-9801-1d408eba8881)
+
+
 ## Important Links
 
 1. [Frontend](https://github.com/RomarioKavin1/burntoearn_nativeFE)
